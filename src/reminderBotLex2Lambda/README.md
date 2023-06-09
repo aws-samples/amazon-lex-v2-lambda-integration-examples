@@ -45,5 +45,11 @@ npm run cdk:deploy:reminderbot
 ## Clean-up
 
 ```
-npm run cdk:destroy:reminderBotLambda
+npm run cdk:destroy:reminderbot
 ```
+
+
+## Known issues
+- If you try to make changes to the Fallback Intent from the console you may get an error. 
+To resolve it, switch to the Visual builder tab and save from there. 
+Once you have saved once you should be able to make other changes to that Intent from either tabs.

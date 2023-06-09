@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This repo contains examples of AWS lambda functions for use with Amazon Lex v2 code hooks.
+This repo contains examples of AWS Lambda functions for use with Amazon Lex v2 code hooks.
 
 
 ## Prerequisites
@@ -37,8 +37,8 @@ npm run cdk:deploy:all
 
 To deploy individual examples, use the specific instructions below:
 
-#### Basic pass-through lambda
-If you are just looking to get a basic template, or to do some experimenting and learning, this lambda will give you a place to start.
+#### Basic pass-through Lambda function
+If you are just looking to get a basic template, or to do some experimenting and learning, this Lambda function will give you a place to start.
 
 See [README](src/basicPassthroughLexv2Lambda/README.md) for detailed information.
 
