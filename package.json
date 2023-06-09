@@ -20,8 +20,8 @@
     "cdk:destroy:reminderbot": "cdk destroy ReminderBot"
   },
   "devDependencies": {
-    "@aws-sdk/client-kendra": "^3.316.0",
-    "@aws-sdk/client-lex-runtime-v2": "^3.316.0",
+    "@aws-sdk/client-kendra": "^3.348.0",
+    "@aws-sdk/client-lex-runtime-v2": "^3.348.0",
     "@types/node": "^18.15.12",
     "@typescript-eslint/eslint-plugin": "^5.59.0",
     "@typescript-eslint/parser": "^5.59.0",
