@@ -50,7 +50,7 @@ Follow the instructions here to attach the Lambda function to your bot once depl
 
 There are 3 different types of code hooks you can use
 - Fulfillment code hook (inside fulfillment step)
-- Conversational step dialog code hook (between conversation steps)
+- Standard dialog code hook (between conversation steps)
 - Elicitation dialog code hook (inside slot capture or confirmation step)
 
 This Lambda function can be attached to any type of code hook, but will take no action apart from logging out details of the input and output.
