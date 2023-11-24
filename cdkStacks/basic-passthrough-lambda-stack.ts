@@ -14,7 +14,7 @@ export class BasicPassthroughLambdaCdkStack extends Stack {
     const basicPassthroughLexv2Lambda = new nodejs.NodejsFunction(this, "BasicPassthroughLexv2Lambda", {
       memorySize: 1024,
       timeout: Duration.seconds(30),
-      runtime: lambda.Runtime.NODEJS_18_X,
+      runtime: lambda.Runtime.NODEJS_20_X,
       handler: "handler",
       environment: {
         DEBUG_LOGGING_ENABLED: "true",

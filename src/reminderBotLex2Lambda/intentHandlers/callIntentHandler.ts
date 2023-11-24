@@ -141,7 +141,7 @@ const isTimePeriod = (interpretedValue: string) => {
 }
 
 const disambiguateValues = (event: LexCodeHookInputEvent, resolvedValues: string[]) => {
-  let disambiguatedValue = resolveTimeFromTimePeriod(event, resolvedValues)
+  const disambiguatedValue = resolveTimeFromTimePeriod(event, resolvedValues)
   if (disambiguatedValue !== "") {
     // If we resolved a value, set the slot to the matched value before we pass back to Lex to handle the next step
     // @ts-ignore - to have reached this point this will have to exist so not adding null checks

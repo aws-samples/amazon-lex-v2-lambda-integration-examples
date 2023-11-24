@@ -18,7 +18,7 @@ export class ReminderBotStack extends Stack {
     const lexFulfillmentLambda = new NodejsFunction(this, "LexFulfillmentLambda", {
       memorySize: 1024,
       timeout: Duration.seconds(30),
-      runtime: Runtime.NODEJS_18_X,
+      runtime: Runtime.NODEJS_20_X,
       handler: "handler",
       environment: {
         DEBUG_LOGGING_ENABLED: "true",

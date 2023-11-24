@@ -198,6 +198,12 @@ export interface LambdaCodeHookInterpretation {
    */
   nluConfidence?: number
 
+
+  /**
+   * Indicates the source of the interpretation.
+   */
+  interpretationSource: InterpretationSource
+
   /**
    * Provides information about the sentiment expressed in a user's response in a conversation. Sentiments are determined using Amazon Comprehend.
    *
@@ -257,6 +263,11 @@ export const enum PromptAttempt {
 export const enum InvocationSource {
   DIALOG_CODE_HOOK = "DialogCodeHook",
   FULFILLMENT_CODE_HOOK = "FulfillmentCodeHook",
+}
+
+export const enum InterpretationSource {
+  BEDROCK= "Bedrock",
+  LEX = "Lex"
 }
 
 export const enum InputMode {

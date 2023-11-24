@@ -10,7 +10,7 @@ import {
 } from "./LexCodeHookInterfaces"
 import { DialogActionType, Message, IntentState } from "@aws-sdk/client-lex-runtime-v2"
 
-const delegate = (sessionState: LambdaCodeHookSessionState, requestAttributes?: Attributes, messages?: Message[]) => {
+const delegate = (sessionState: LambdaCodeHookSessionState, requestAttributes?: Attributes) => {
   // Ensure session state dialog action is set to Delegate, pass everything else in as-is
   sessionState.dialogAction = {
     type: DialogActionType.DELEGATE,
@@ -18,7 +18,6 @@ const delegate = (sessionState: LambdaCodeHookSessionState, requestAttributes?: 
   const response: LexCodeHookResponse = {
     sessionState: sessionState,
     requestAttributes: requestAttributes,
-    messages: messages,
   }
 
   return response
@@ -34,7 +33,7 @@ const fulfillIntent = (
   messages?: Message[]
 ) => {
   //NOTE Delegate doesn't take the passed in messages and will just use the build-time configuration prompts
-  let fulfilledSessionState = updateSessionState(sessionState, IntentState.FULFILLED, DialogActionType.CLOSE)
+  const fulfilledSessionState = updateSessionState(sessionState, IntentState.FULFILLED, DialogActionType.CLOSE)
 
   const response: LexCodeHookResponse = {
     sessionState: fulfilledSessionState,
@@ -48,7 +47,7 @@ const fulfillIntent = (
 const endConversation = (event: LexCodeHookInputEvent, messages?: Message[]) => {
   // This indicates a successful completion of the conversation,
   //  if this is not the case the state should be set to "Failed"
-  let sessionState = updateSessionState(event.sessionState, IntentState.FULFILLED, DialogActionType.CLOSE)
+  const sessionState = updateSessionState(event.sessionState, IntentState.FULFILLED, DialogActionType.CLOSE)
 
   const response: LexCodeHookResponse = {
     sessionState: sessionState,
@@ -60,7 +59,7 @@ const endConversation = (event: LexCodeHookInputEvent, messages?: Message[]) => 
 }
 
 const promptForNewIntent = (event: LexCodeHookInputEvent, messages?: Message[]) => {
-  let sessionState = event.sessionState
+  const sessionState = event.sessionState
   delete sessionState.intent
 
   const response: LexCodeHookResponse = {
@@ -126,7 +125,7 @@ const updateSessionState = (
   newIntentState: IntentState,
   newDialogActionType: DialogActionType
 ) => {
-  let sessionState = currentState
+  const sessionState = currentState
   sessionState.intent
     ? (sessionState.intent.state = newIntentState)
     : (sessionState.intent = {

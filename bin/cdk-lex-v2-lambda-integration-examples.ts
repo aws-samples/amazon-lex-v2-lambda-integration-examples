@@ -11,7 +11,10 @@ import { BasicPassthroughLambdaCdkStack } from "../cdkStacks/basic-passthrough-l
 import { ReminderBotStack } from "../cdkStacks/reminder-bot-stack"
 
 const app = new cdk.App()
-Aspects.of(app).add(new AwsSolutionsChecks({ verbose: true }))
+
+//*** NOTE - IT IS HIGHLY RECOMMENDED THAT YOU UNCOMMENT THIS IF YOU ARE EXTENDING THIS ** //
+//Aspects.of(app).add(new AwsSolutionsChecks({ verbose: true }))
+
 
 new BasicPassthroughLambdaCdkStack(app, "BasicLexLambdaIntegration", {})
 new ReminderBotStack(app, "ReminderBot", {})
