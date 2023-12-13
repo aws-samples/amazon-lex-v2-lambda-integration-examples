@@ -1,0 +1,19 @@
+{
+  "name": "lambdaresponsevalidator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "ValidateLambdaResponse.js",
+  "scripts": {
+    "package": "browserify ValidateLambdaResponse.js --s validation -o ../build/validation-bundle.js",
+    "watch": "watchify ValidateLambdaResponse.js --s validation -o ../build/validation-bundle.js --debug --verbose"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ajv": "^8.12.0"
+  },
+  "devDependencies": {
+    "browserify": "^17.0.0",
+    "watchify": "^4.0.0"
+  }
+}

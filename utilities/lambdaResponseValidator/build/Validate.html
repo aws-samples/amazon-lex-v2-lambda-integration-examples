@@ -1,0 +1,196 @@
+<!-- Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. -->
+<!-- SPDX-License-Identifier: MIT-0 -->
+
+<!-- Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. -->
+<!-- SPDX-License-Identifier: MIT-0 -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Validate Code Hook Response</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&amp;display=swap">
+  <style>
+    body {
+      font-family: 'Open Sans', sans-serif;
+    }
+    h1 {
+      color: blue;
+    }
+    p {
+      display: block;
+      margin-block-start: 1em;
+      margin-block-end: 1em;
+      margin-inline-start: 0;
+      margin-inline-end: 0;
+    }
+    textarea {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 10px;
+      font-family: monospace;
+    }
+    .input {
+      margin: 20px;
+    }
+    .flex-container {
+      display: flex;
+    }
+    .flex-child {
+      flex: 1;
+    }
+    .flex-child:first-child {
+      margin-right: 20px;
+    }
+    .validateButton {
+      margin: 25px 20px 20px 10px;
+    }
+    button {
+      align-items: center;
+      appearance: none;
+      background-color: #3EB2FD;
+      background-image: linear-gradient(1deg, #4F58FD, #149BF3 99%);
+      background-size: calc(100% + 20px) calc(100% + 20px);
+      border-radius: 100px;
+      border-width: 0;
+      box-shadow: none;
+      box-sizing: border-box;
+      color: #FFFFFF;
+      cursor: pointer;
+      display: inline-flex;
+      font-family: CircularStd, sans-serif;
+      font-size: 1rem;
+      height: auto;
+      justify-content: center;
+      line-height: 1.5;
+      padding: 6px 20px;
+      position: relative;
+      text-align: center;
+      text-decoration: none;
+      transition: background-color .2s, background-position .2s;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+      vertical-align: top;
+      white-space: nowrap;
+    }
+    button:active,
+    button:focus {
+      outline: none;
+    }
+    button:hover {
+      background-position: -20px -20px;
+    }
+    button:focus:not(:active) {
+      box-shadow: rgba(40, 170, 255, 0.25) 0 0 0 .125em;
+    }
+    .results {
+      border: 1px lightgrey solid;
+    }
+    .valid {
+      background: #1fd61f;
+      padding: 10px;
+      color: white
+    }
+    .error {
+      background: red;
+      padding: 10px;
+      color: white
+    }
+    .output {
+      padding: 10px;
+    }
+    .header {
+      background: #616561;
+      padding: 10px;
+      color: white;
+      display: block;
+      font-size: 1.7em;
+      margin-block-start: 0.67em;
+      margin-block-end: 0.67em;
+      margin-inline-start: 0;
+      margin-inline-end: 0;
+      font-weight: bold;
+    }
+    .disclaimer {
+      font-size: 10pt;
+      font-weight: 200;
+      margin-top: 12px
+    }
+    li {
+      margin: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="header" class="header">Amazon Lex v2 Code Hook Response Validator</div>
+
+<div class="flex-container">
+
+  <div class="flex-child">
+
+    <div class="input">
+      <p><label for="codeHookResponseInput">Enter the response you are sending from the AWS Lambda function attached to your code hook:</label></p>
+      <textarea id="codeHookResponseInput" name="codeHookResponseInput" rows="50"></textarea>
+    </div>
+
+  </div>
+
+  <div class="flex-child">
+
+    <div class="validateButton">
+      <button onClick="validate()">Validate</button>
+    </div>
+
+    <div id="results" class="results">
+      <div id="valid" class="valid" hidden>Valid</div>
+      <div id="error" class="error" hidden>Schema violations found</div>
+      <div id="output" class="output"></div>
+    </div>
+    <div class="disclaimer">
+      Note: All data is processed locally on your browser. Be aware that this tool will catch most schema validations,
+      but there may be other issues with your response that will not be caught here.
+      Review the <a href="https://docs.aws.amazon.com/lexv2/latest/dg/lambda.html" target="_blank">documentation</a> for the full
+      requirements.
+    </div>
+
+  </div>
+
+</div>
+
+
+<script src="validation-bundle.js"></script>
+<script>
+  function validate() {
+    const responseJson = document.getElementById("codeHookResponseInput").value;
+    document.getElementById("output").innerHTML = "";
+    document.getElementById("valid").hidden = true;
+    document.getElementById("error").hidden = true;
+
+    try {
+      const codeHookResponseJSON = JSON.parse(responseJson);
+      document.getElementById("codeHookResponseInput").value = JSON.stringify(codeHookResponseJSON, undefined, 2);
+      const response = validation.validateInput(codeHookResponseJSON);
+      if (response) {
+        if (response.length > 0) {
+          for (let i = 0; i < response.length; i++) {
+            const node = document.createElement("li");
+            const textnode = document.createTextNode(response[i]);
+            node.appendChild(textnode);
+            document.getElementById("output").appendChild(node);
+
+          }
+          document.getElementById("error").hidden = false;
+        } else {
+          document.getElementById("valid").hidden = false;
+        }
+      }
+    } catch (error) {
+      document.getElementById("output").innerHTML = error;
+    }
+  }
+</script>
+
+</body>
+</html>

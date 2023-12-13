@@ -146,15 +146,17 @@ export type Attributes = Record<string, string>
  */
 export interface LambdaCodeHookSessionState extends SessionState {
   sessionAttributes: Attributes
-  intent?: LambdaCodeHookSessionStateIntent
 }
 
 /**
- * The Lambda function event Intent state differs from the API_runtime_Intent
- *  because it can optionally include the kendraResponse when the intent is KendraSearchIntent
+ * The Lambda function event Intent state differs from the API_runtime_Intent because
+ *  - it can optionally include the kendraResponse when the intent is KendraSearchIntent
+ *  - there is a smaller set of states, in progress or waiting states will not be sent to,
+ *      and should not be returned from, the Lambda function
  */
 export interface LambdaCodeHookSessionStateIntent extends Intent {
   kendraResponse?: QueryResult
+  state?: CodeHookIntentState
 }
 
 export interface Transcription {
@@ -264,6 +266,14 @@ export const enum InvocationSource {
   DIALOG_CODE_HOOK = "DialogCodeHook",
   FULFILLMENT_CODE_HOOK = "FulfillmentCodeHook",
 }
+
+export const enum CodeHookIntentState {
+  FAILED = "Failed",
+  FULFILLED = "Fulfilled",
+  IN_PROGRESS = "InProgress",
+  READY_FOR_FULFILLMENT = "ReadyForFulfillment",
+}
+
 
 export const enum InterpretationSource {
   BEDROCK= "Bedrock",

@@ -7,11 +7,13 @@ import {
   LambdaCodeHookSessionState,
   Attributes,
   LambdaCodeHookSessionStateIntent,
+  CodeHookIntentState
 } from "./LexCodeHookInterfaces"
-import { DialogActionType, Message, IntentState } from "@aws-sdk/client-lex-runtime-v2"
+import { DialogActionType, Message } from "@aws-sdk/client-lex-runtime-v2"
 
 const delegate = (sessionState: LambdaCodeHookSessionState, requestAttributes?: Attributes) => {
   // Ensure session state dialog action is set to Delegate, pass everything else in as-is
+  // NOTE Delegate doesn't use any passed in messages and will just use the build-time configuration prompts
   sessionState.dialogAction = {
     type: DialogActionType.DELEGATE,
   }
@@ -32,8 +34,7 @@ const fulfillIntent = (
   requestAttributes: Attributes,
   messages?: Message[]
 ) => {
-  //NOTE Delegate doesn't take the passed in messages and will just use the build-time configuration prompts
-  const fulfilledSessionState = updateSessionState(sessionState, IntentState.FULFILLED, DialogActionType.CLOSE)
+  const fulfilledSessionState = updateSessionState(sessionState, CodeHookIntentState.FULFILLED, DialogActionType.CLOSE)
 
   const response: LexCodeHookResponse = {
     sessionState: fulfilledSessionState,
@@ -47,7 +48,7 @@ const fulfillIntent = (
 const endConversation = (event: LexCodeHookInputEvent, messages?: Message[]) => {
   // This indicates a successful completion of the conversation,
   //  if this is not the case the state should be set to "Failed"
-  const sessionState = updateSessionState(event.sessionState, IntentState.FULFILLED, DialogActionType.CLOSE)
+  const sessionState = updateSessionState(event.sessionState, CodeHookIntentState.FULFILLED, DialogActionType.CLOSE)
 
   const response: LexCodeHookResponse = {
     sessionState: sessionState,
@@ -90,7 +91,7 @@ const promptForConfirmationOfIntent = (
     type: DialogActionType.CONFIRM_INTENT,
   }
 
-  intent.state = IntentState.IN_PROGRESS
+  intent.state = CodeHookIntentState.IN_PROGRESS
   response.sessionState.intent = intent
 
   return response
@@ -114,7 +115,7 @@ const promptForSlot = (
     slotToElicit: slotToElicit,
   }
 
-  intent.state = IntentState.IN_PROGRESS
+  intent.state = CodeHookIntentState.IN_PROGRESS
   response.sessionState.intent = intent
 
   return response
@@ -122,7 +123,7 @@ const promptForSlot = (
 
 const updateSessionState = (
   currentState: LambdaCodeHookSessionState,
-  newIntentState: IntentState,
+  newIntentState: CodeHookIntentState,
   newDialogActionType: DialogActionType
 ) => {
   const sessionState = currentState

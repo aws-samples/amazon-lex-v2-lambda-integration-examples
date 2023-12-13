@@ -1,0 +1,457 @@
+{
+  "$ref": "#/definitions/LexCodeHookResponse",
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "ActiveContext": {
+      "additionalProperties": false,
+      "properties": {
+        "contextAttributes": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "<p>A list of contexts active for the request. A context can be activated when a previous intent is fulfilled, or by including the context in the request.</p> <p>If you don't specify a list of contexts, Amazon Lex V2 will use the current list of contexts for the session. If you specify an empty list, all contexts for the session are cleared. </p>",
+          "type": "object"
+        },
+        "name": {
+          "description": "<p>The name of the context.</p>",
+          "type": "string"
+        },
+        "timeToLive": {
+          "$ref": "#/definitions/ActiveContextTimeToLive",
+          "description": "<p>Indicates the number of turns or seconds that the context is active. Once the time to live expires, the context is no longer returned in a response.</p>"
+        }
+      },
+      "required": [
+        "name",
+        "timeToLive"
+      ],
+      "type": "object"
+    },
+    "ActiveContextTimeToLive": {
+      "additionalProperties": false,
+      "properties": {
+        "timeToLiveInSeconds": {
+          "description": "<p>The number of seconds that the context is active. You can specify between 5 and 86400 seconds (24 hours).</p>",
+          "type": "number"
+        },
+        "turnsToLive": {
+          "description": "<p>The number of turns that the context is active. You can specify up to 20 turns. Each request and response from the bot is a turn.</p>",
+          "type": "number"
+        }
+      },
+      "required": [
+        "turnsToLive",
+        "timeToLiveInSeconds"
+      ],
+      "type": "object"
+    },
+    "Attributes": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Map of key/value pairs",
+      "type": "object"
+    },
+    "Button": {
+      "additionalProperties": false,
+      "properties": {
+        "text": {
+          "description": "<p>The text that is displayed on the button.</p>",
+          "type": "string"
+        },
+        "value": {
+          "description": "<p>The value returned to Amazon Lex V2 when a user chooses the button.</p>",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "ConfirmationState": {
+      "enum": [
+        "Confirmed",
+        "Denied",
+        "None"
+      ],
+      "type": "string"
+    },
+    "DialogAction": {
+      "additionalProperties": false,
+      "properties": {
+        "slotElicitationStyle": {
+          "$ref": "#/definitions/StyleType",
+          "description": "<p>Configures the slot to use spell-by-letter or spell-by-word style. When you use a style on a slot, users can spell out their input to make it clear to your bot.</p> <ul> <li> <p>Spell by letter - \"b\" \"o\" \"b\"</p> </li> <li> <p>Spell by word - \"b as in boy\" \"o as in oscar\" \"b as in boy\"</p> </li> </ul> <p>For more information, see <a href=\"https://docs.aws.amazon.com/lexv2/latest/dg/using-spelling.html\"> Using spelling to enter slot values </a>.</p>"
+        },
+        "slotToElicit": {
+          "description": "<p>The name of the slot that should be elicited from the user. Required if the type of dialogAction is ElicitSlot</p>",
+          "type": "string"
+        },
+        "subSlotToElicit": {
+          "$ref": "#/definitions/ElicitSubSlot",
+          "description": "<p>The name of the constituent sub slot of the composite slot specified in slotToElicit that should be elicited from the user.</p>"
+        },
+        "type": {
+          "$ref": "#/definitions/DialogActionType",
+          "description": "<p>The next action that the bot should take in its interaction with the user. The possible values are:</p> <ul> <li> <p>  <code>Close</code> - Indicates that there will not be a response from the user. For example, the statement \"Your order has been placed\" does not require a response.</p> </li> <li> <p>  <code>ConfirmIntent</code> - The next action is asking the user if the intent is complete and ready to be fulfilled. This is a yes/no question such as \"Place the order?\"</p> </li> <li> <p>  <code>Delegate</code> - The next action is determined by Amazon Lex V2.</p> </li> <li> <p>  <code>ElicitIntent</code> - The next action is to elicit an intent from the user.</p> </li> <li> <p>  <code>ElicitSlot</code> - The next action is to elicit a slot value from the user.</p> </li> </ul>"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "if": {
+        "anyOf": [
+          {
+            "properties": {
+              "type": {
+                "const": "ElicitSlot"
+              }
+            }
+          }
+        ]
+      },
+      "then": {
+        "required": [
+          "slotToElicit"
+        ],
+        "properties": {
+          "slotToElicit": {
+            "minLength": 1
+          }
+        }
+      },
+      "type": "object"
+    },
+    "DialogActionType": {
+      "enum": [
+        "Close",
+        "ConfirmIntent",
+        "Delegate",
+        "ElicitIntent",
+        "ElicitSlot",
+        "None"
+      ],
+      "type": "string"
+    },
+    "ElicitSubSlot": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "description": "<p>The name of the slot that should be elicited from the user.</p>",
+          "type": "string"
+        },
+        "subSlotToElicit": {
+          "$ref": "#/definitions/ElicitSubSlot",
+          "description": "<p>The field is not supported.</p>"
+        }
+      },
+      "type": "object"
+    },
+    "ImageResponseCard": {
+      "additionalProperties": false,
+      "properties": {
+        "buttons": {
+          "description": "<p>A list of buttons that should be displayed on the response card. The arrangement of the buttons is determined by the platform that displays the button.</p>",
+          "items": {
+            "$ref": "#/definitions/Button"
+          },
+          "type": "array"
+        },
+        "imageUrl": {
+          "description": "<p>The URL of an image to display on the response card. The image URL must be publicly available so that the platform displaying the response card has access to the image.</p>",
+          "type": "string"
+        },
+        "subtitle": {
+          "description": "<p>The subtitle to display on the response card. The format of the subtitle is determined by the platform displaying the response card.</p>",
+          "type": "string"
+        },
+        "title": {
+          "description": "<p>The title to display on the response card. The format of the title is determined by the platform displaying the response card.</p>",
+          "type": "string"
+        }
+      },
+      "required": [
+        "title"
+      ],
+      "type": "object"
+    },
+    "Intent": {
+      "additionalProperties": false,
+      "properties": {
+        "confirmationState": {
+          "$ref": "#/definitions/ConfirmationState",
+          "description": "<p>Contains information about whether fulfillment of the intent has been confirmed.</p>"
+        },
+        "name": {
+          "description": "<p>The name of the intent.</p>",
+          "type": "string"
+        },
+        "slots": {
+          "additionalProperties": {
+            "$ref": "#/definitions/Slot"
+          },
+          "description": "<p>A map of all of the slots for the intent. The name of the slot maps to the value of the slot. If a slot has not been filled, the value is null.</p>",
+          "type": "object"
+        },
+        "state": {
+          "$ref": "#/definitions/IntentState",
+          "description": "<p>Contains fulfillment information for the intent. </p>"
+        }
+      },
+      "type": "object"
+    },
+    "IntentState": {
+      "enum": [
+        "Failed",
+        "Fulfilled",
+        "InProgress",
+        "ReadyForFulfillment"
+      ],
+      "type": "string"
+    },
+    "LambdaCodeHookSessionState": {
+      "additionalProperties": false,
+      "description": "The Lambda function event Session state differs from the API_runtime_SessionState because of the format of the Intent",
+      "properties": {
+        "activeContexts": {
+          "description": "<p>One or more contexts that indicate to Amazon Lex V2 the context of a request. When a context is active, Amazon Lex V2 considers intents with the matching context as a trigger as the next intent in a session.</p>",
+          "items": {
+            "$ref": "#/definitions/ActiveContext"
+          },
+          "type": "array"
+        },
+        "dialogAction": {
+          "$ref": "#/definitions/DialogAction",
+          "description": "<p>The next step that Amazon Lex V2 should take in the conversation with a user.</p>"
+        },
+        "intent": {
+          "$ref": "#/definitions/Intent",
+          "description": "<p>The active intent that Amazon Lex V2 is processing.</p>"
+        },
+        "originatingRequestId": {
+          "description": "<p>A unique identifier for a specific request.</p>",
+          "type": "string"
+        },
+        "runtimeHints": {
+          "$ref": "#/definitions/RuntimeHints",
+          "description": "<p>Hints for phrases that a customer is likely to use for a slot. Amazon Lex V2 uses the hints to help determine the correct value of a slot.</p>"
+        },
+        "sessionAttributes": {
+          "$ref": "#/definitions/Attributes",
+          "description": "<p>Map of key/value pairs representing session-specific context information. It contains application information passed between Amazon Lex V2 and a client application.</p>"
+        }
+      },
+      "required": [
+        "sessionAttributes",
+        "dialogAction"
+      ],
+      "type": "object"
+    },
+    "LexCodeHookResponse": {
+      "additionalProperties": false,
+      "properties": {
+        "messages": {
+          "description": "One or more messages that Amazon Lex V2 shows to the customer to perform the next turn of the conversation. If you don't supply messages, Amazon Lex V2 uses the appropriate message defined when the bot was created\n\nRequired if dialogAction.type is ElicitIntent.",
+          "items": {
+            "$ref": "#/definitions/Message"
+          },
+          "type": "array"
+        },
+        "requestAttributes": {
+          "$ref": "#/definitions/Attributes",
+          "description": "Request-specific attributes"
+        },
+        "sessionState": {
+          "$ref": "#/definitions/LambdaCodeHookSessionState",
+          "description": "The current state of the conversation with the user.\n\nThe actual contents of the structure depends on the type of dialog action."
+        }
+      },
+      "required": [
+        "sessionState"
+      ],
+      "if": {
+        "properties": {
+          "sessionState": {
+            "properties": {
+              "dialogAction": {
+                "properties" : {
+                  "type": {
+                    "const": "ElicitIntent"
+                  }
+                  }
+                }
+            }
+          }
+        }
+      },
+      "then": {
+        "required": ["messages"],
+        "properties": {
+          "messages": {
+            "minItems": 1
+          }
+        }
+      },
+      "else" : {
+        "required":[]
+      },
+      "type": "object"
+    },
+    "Message": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "content": {
+          "description": "<p>The text of the message.</p>",
+          "type": "string"
+        },
+        "contentType": {
+          "$ref": "#/definitions/MessageContentType",
+          "description": "<p>Indicates the type of response.</p>"
+        },
+        "imageResponseCard": {
+          "$ref": "#/definitions/ImageResponseCard",
+          "description": "<p>A card that is shown to the user by a messaging platform. You define the contents of the card, the card is displayed by the platform. </p> <p>When you use a response card, the response from the user is constrained to the text associated with a button on the card.</p>"
+        }
+      },
+      "required": [
+        "contentType"
+      ],
+      "if": {
+        "properties": {
+          "contentType": {
+            "const": "ImageResponseCard"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "imageResponseCard"
+        ]
+      },
+      "else": {
+        "required": [
+          "content"
+        ]
+      }
+    },
+    "MessageContentType": {
+      "enum": [
+        "CustomPayload",
+        "ImageResponseCard",
+        "PlainText",
+        "SSML"
+      ],
+      "type": "string"
+    },
+    "RuntimeHintDetails": {
+      "additionalProperties": false,
+      "properties": {
+        "runtimeHintValues": {
+          "description": "<p>One or more strings that Amazon Lex V2 should look for in the input to the bot. Each phrase is given preference when deciding on slot values.</p>",
+          "items": {
+            "$ref": "#/definitions/RuntimeHintValue"
+          },
+          "type": "array"
+        },
+        "subSlotHints": {
+          "additionalProperties": {
+            "$ref": "#/definitions/RuntimeHintDetails"
+          },
+          "description": "<p>A map of constituent sub slot names inside a composite slot in the intent and the phrases that should be added for each sub slot. Inside each composite slot hints, this structure provides a mechanism to add granular sub slot phrases. Only sub slot hints are supported for composite slots. The intent name, composite slot name and the constituent sub slot names must exist.</p>",
+          "type": "object"
+        }
+      },
+      "type": "object"
+    },
+    "RuntimeHintValue": {
+      "additionalProperties": false,
+      "properties": {
+        "phrase": {
+          "description": "<p>The phrase that Amazon Lex V2 should look for in the user's input to the bot.</p>",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "RuntimeHints": {
+      "additionalProperties": false,
+      "properties": {
+        "slotHints": {
+          "additionalProperties": {
+            "additionalProperties": {
+              "$ref": "#/definitions/RuntimeHintDetails"
+            },
+            "type": "object"
+          },
+          "description": "<p>A list of the slots in the intent that should have runtime hints added, and the phrases that should be added for each slot.</p> <p>The first level of the <code>slotHints</code> map is the name of the intent. The second level is the name of the slot within the intent. For more information, see <a href=\"https://docs.aws.amazon.com/lexv2/latest/dg/using-hints.html\">Using hints to improve accuracy</a>.</p> <p>The intent name and slot name must exist.</p>",
+          "type": "object"
+        }
+      },
+      "type": "object"
+    },
+    "Shape": {
+      "enum": [
+        "Composite",
+        "List",
+        "Scalar"
+      ],
+      "type": "string"
+    },
+    "Slot": {
+      "additionalProperties": false,
+      "properties": {
+        "shape": {
+          "$ref": "#/definitions/Shape",
+          "description": "<p>When the <code>shape</code> value is <code>List</code>, it indicates that the <code>values</code> field contains a list of slot values. When the value is <code>Scalar</code>, it indicates that the <code>value</code> field contains a single value.</p>"
+        },
+        "subSlots": {
+          "additionalProperties": {
+            "$ref": "#/definitions/Slot"
+          },
+          "description": "<p>The constituent sub slots of a composite slot.</p>",
+          "type": "object"
+        },
+        "value": {
+          "$ref": "#/definitions/Value",
+          "description": "<p>The current value of the slot.</p>"
+        },
+        "values": {
+          "description": "<p>A list of one or more values that the user provided for the slot. For example, if a for a slot that elicits pizza toppings, the values might be \"pepperoni\" and \"pineapple.\" </p>",
+          "items": {
+            "$ref": "#/definitions/Slot"
+          },
+          "type": "array"
+        }
+      },
+      "type": ["object", "null"]
+    },
+    "StyleType": {
+      "enum": [
+        "Default",
+        "SpellByLetter",
+        "SpellByWord"
+      ],
+      "type": "string"
+    },
+    "Value": {
+      "additionalProperties": false,
+      "properties": {
+        "interpretedValue": {
+          "description": "<p>The value that Amazon Lex V2 determines for the slot. The actual value depends on the setting of the value selection strategy for the bot. You can choose to use the value entered by the user, or you can have Amazon Lex V2 choose the first value in the <code>resolvedValues</code> list.</p>",
+          "type": "string"
+        },
+        "originalValue": {
+          "description": "<p>The text of the utterance from the user that was entered for the slot.</p>",
+          "type": "string"
+        },
+        "resolvedValues": {
+          "description": "<p>A list of additional values that have been recognized for the slot.</p>",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    }
+  }
+}
